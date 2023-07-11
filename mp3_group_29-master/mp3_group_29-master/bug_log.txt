@@ -1,0 +1,110 @@
+This file stores a log of all known bugs in MP2.
+
+
+Authors: Jeffrey Chang, Jiyoon Lee, David Lin, Sydney Wang
+
+Date: Oct 12, 2022
+
+
+Entry Format:
+
+
+Date Discovered: 'MM/DD/YYYY'
+
+Error: 'Name of Error' OR 'Error Message'
+
+Error Description:
+
+'Explanation goes here'
+
+
+-------------------------------------------------
+
+Dated Discovered: 10/16/2022
+Error: Crash after boot sequence
+Description:
+OS crashes immediately after boot sequence, regardless
+of code run in kernel.c. Due to a paging error, improper
+initialization due to initializing wrong bit to turn on
+4MB pages (accidentally set bit 3 instead of bit 4).
+
+Date Discovered: 10/16/2022
+Error: interrupts not clearing
+Description:
+Interrupts did not end successfully. Due to faulty send_eoi() function
+writing to the wrong port on the PIC (offset by 1).
+
+Date Discovered: 10/16/2022
+Error: Keyboard presses print wrong characters to screen
+Description:
+Forgot to convert scanned data from keyboard into the corresponding
+character, causing the wrong characters to be printed. Error resolved
+by using array to map the scanned data to the corresponding character.
+
+Date Discovered: 10/16/2022
+Error: init_page was just crashing every time it was run
+Description: 
+the code was turning on the wrong bit in %cr4. instead of bit 4, it was setting bit 3 to 1. Also, video mem index in the page table was wrong, it wasn't the same as the video mem address in physical mem. matching the video mem index to the video mem physical address made it work.
+
+Date Discovered: 10/16/2022
+Error: For some reason, test results came back in the wrong order and we weren't sure if it was indicative of a deeper issue
+Description: 
+that's just how the visualization works in the kernal, if there's no more space it loops back around
+
+Date Discovered: 10/17/2022
+Error: Keyboard registers multiple keypresses for one keypress
+Description:
+This was due to a corrupted image file, and also because the keyboard sends data for key up and key down.
+
+Date Discovered: 10/17/2022
+Error: PIC wrong initialization for secondary PIC
+Description:
+Secondary PIC was initialized incorrectly because it was attempting to write
+to main PIC, resulting in failed writes. Resolved by changing name to write
+to secondary when intializing secondary PIC and ensuring command port was
+selected before data port was written to.
+
+Date Discovered: 10/23/2022
+Error: terminal_read infinite loop
+Description:
+terminal_read test failed due to infinite loop, needed to update enter_pressed
+to be able to read user input. Fixed by modifying enter_pressed case for keyboard
+to set flag.
+
+Date Discovered: 10/23/2022
+Error: RTC interrupt only happening once
+Description: RTC interrupt would not happen at regular frequency. Issue turned out to be writing ICW4
+to main rather than secondary PIC.
+
+Date Discovered: 10/23/2022
+Error: read_data not writing to buffer
+Description: Combination of getting the incorrect starting address as well as inefficient memcpy from block
+resulted in buffer not being written to properly. Once code modified to print blocks, the function worked.
+
+Date Discovered: 11/7/2022
+Error: incompatible file operation type
+Description: Had wrong function signature for file read and write. Changed bytes to be same type as open.
+
+Date Discovered: 11/7/2022
+Error: Execute not running program
+Description: Execute terminates successfully but does not run program, disallows interrupts.
+
+Date Discovered: 11/7/2022
+Error: Page fault in context switch of Execute
+Description: Page fault occurring at iret step of context_switch in paging due to incorrect stack setup.
+
+Date Discovered: 11/21/2022
+Error: Multiple sources of page fault in execute
+Description: Many things were not initialized properly, no space allocated for video memory in paging,
+paging done improperly, accidental usage of uninitilized PCB instead of terminal's PCB, and incorrect
+EIP being loaded due to bug in read_data.
+
+Date Discovered: 11/28/2022
+Error: Pingpong causing cursor to go to bottom, messes up buffer
+Description: error in putc function in lib.c that was causing the executing terminal to update
+the cursor in the displayed terminal, rather than putc to only update cursor in displayed terminal.
+
+Date Discovered: 11/30/2022
+Error: Pingpong prints to wrong screen
+Description: forgot to run reset_vidmem when switching terminals, resulting sometimes in RTC
+printing to wrong screen due to race condition.

@@ -1,0 +1,17 @@
+For loop initial declaration used outside C99 mode
+
+Pointer to int conversion error in text.c
+
+A bunch of "Targets in initialization differ in signdness" due to lack of unsigned in char arrays
+
+PANIC: cannot initialize modex -> Problem with draw_vert_line, Problem with Copy image with misinput of scr_addr
+
+Set Port Permissions: Operation not permitted -> I needed to run it in admin mode to get access to memory
+
+Status bar was a series of lines instead of a black rectangle ->my reg 9 was incorrect, updating it made it work
+
+Vertical draw was not working because I used SCROLL_X_DIM, which caused ot screen to update strangely
+
+Text is showing on screen strangely, cut in half for each letter -> My offset forgot to add the loop of the font width, kept updating the same 4 its instead across all 8 bits of the char
+
+Trying to print typed letters to screen caused segmentation faults->I was using a char array to for holding my concanated string of location and typed words, but char arrays don't normally come with an '\0' (end of string), so the function reading it kept going instead of stopping at length 40, resulting in a seg fault. I replaced the char array with a char[41] length array and manually set the last input as '\0' so the char array could pretend to be a string.
